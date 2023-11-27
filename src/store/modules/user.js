@@ -1,3 +1,4 @@
+import { login } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 // 声明token
 const state = {
@@ -11,7 +12,7 @@ const mutations = {
     // 同步到缓存
     setToken(token)
   },
-  removeToken() {
+  removeToken(state) {
     // 删除vuex的token
     state.token = null
     removeToken()
@@ -20,10 +21,11 @@ const mutations = {
 
 const actions = {
   // context 上下文
-  login(context, data) {
+  async login(context, data) {
     console.log(data)
     // todo:调用登录接口
-    context.commit('setToken', '123456')
+    const token = await login(data)
+    context.commit('setToken', token)
   }
 }
 
