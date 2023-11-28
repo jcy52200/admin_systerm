@@ -7,23 +7,26 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
+          <img v-if="avatar" :src="avatar" class="user-avatar">
+          <span v-else class="username">{{ name?.charAt(0) }}</span>
+          <span class="name">{{ name }}</span>
+          <i class="el-icon-setting" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
             <el-dropdown-item>
-              Home
+              首页
             </el-dropdown-item>
           </router-link>
           <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
-            <el-dropdown-item>Github</el-dropdown-item>
+            <el-dropdown-item>项目地址</el-dropdown-item>
           </a>
           <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
-            <el-dropdown-item>Docs</el-dropdown-item>
+            <el-dropdown-item>修改密码</el-dropdown-item>
           </a>
-          <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">Log Out</span>
+          <!-- native：注册组件的根元素的原生事件，el中本无@click -->
+          <el-dropdown-item @click.native="logout">
+            <span style="display:block;">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -35,6 +38,9 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import store from '@/store'
+import router from '@/router'
+import { Message } from 'element-ui'
 
 export default {
   components: {
@@ -42,9 +48,11 @@ export default {
     Hamburger
   },
   computed: {
+    // 引入头像和用户名称
     ...mapGetters([
       'sidebar',
-      'avatar'
+      'avatar',
+      'name'
     ])
   },
   methods: {
@@ -52,8 +60,10 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      // 调用退出登录的action
+      await store.dispatch('user/logout')
+      router.push('/login')
+      Message({ type: 'success', message: '已退出登录' })
     }
   }
 }
@@ -117,12 +127,33 @@ export default {
       .avatar-wrapper {
         margin-top: 5px;
         position: relative;
-
-        .user-avatar {
-          cursor: pointer;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        .name {
+          //
+          margin-right: 10px;
+          font-size: 16px;
+        }
+        .username {
           width: 40px;
           height: 40px;
-          border-radius: 10px;
+          border-radius: 50%;
+          margin-right: 6px;
+          text-align: center;
+          background-color: aqua;
+          color: #fff;
+          line-height: 40px;
+          font-size: 20px;
+        }
+        .el-icon-setting {
+          font-size: 20px;
+        }
+        .user-avatar {
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          margin-right: 6px;
         }
 
         .el-icon-caret-bottom {
