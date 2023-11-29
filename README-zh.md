@@ -86,6 +86,37 @@ npm run lint
 npm run lint -- --fix
 ```
 
+### 工程结构解析
+
+```
+├── dist                       # 打包文件夹（可删除重新打包）
+├── src                        # 源代码
+│   ├── components               # 全局组件
+│   ├── composables              # 组合式函数
+│   ├── router                   # 路由设置
+│   ├── views                    # 主页面
+│       ├── dashboard               # 首页
+│       ├── category                # 分类页
+│       ├── cart                    # 购物车
+│       ├── my                      # 我的
+│       └── login                   # 登录页
+│   ├── apis                     # 所有请求
+│   ├── stores                   # 全局 vuex
+│       ├── modules                 # 模块
+│       ├── getter.js               # 
+│       └── index.js                # store 入口
+│   ├── styles                   # 全局样式
+│   ├── utils                    # 全局方法
+│   ├── App.vue                  # 入口页面
+│   ├── main.js                  # Vue初始化入口文件
+│   ├── permission.js            # 导航守卫放置页
+│   ├── setting.js               # 页面设置  
+├── .editorconfig              # editorconfig 配置
+├── .eslintrc.cjs              # eslint 配置
+├── .gitignore                 # git 忽略文件
+├── package.json               # package.json 依赖
+```
+
 更多信息请参考 [使用文档](https://panjiachen.github.io/vue-element-admin-site/zh/)
 
 完整gitee项目代码地址: https://gitee.com/shuiruohanyu/heimahr/tree/master
