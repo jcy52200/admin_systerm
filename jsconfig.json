@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": "./", // 指定模块基础目录
     "paths": {
-        "@/*": ["src/*"]
+        "@/*": ["src/*"] // 解决项目中使用@作为路径别名导致vscode无法跳转的问题
     }
   },
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist"] // 提高ide性能
 }

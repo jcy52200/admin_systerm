@@ -80,6 +80,9 @@ export default {
   width: 50px;
   display: inline-block;
   margin: 10px;
+<<<<<<< HEAD
   margin-right: 40px;
+=======
+>>>>>>> 11f04670318e16bbb66db09e2eca95aed0e787e1
 }
 </style>

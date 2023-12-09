@@ -1,4 +1,5 @@
 // https://github.com/michael-ciniawsky/postcss-load-config
+// 处理样式的工具
 
 module.exports = {
   'plugins': {
