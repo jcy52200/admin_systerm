@@ -26,8 +26,7 @@ const mutations = {
 const actions = {
   // context 上下文
   async login(context, data) {
-    console.log(data)
-    // todo:调用登录接口
+    // 调用登录接口
     const token = await login(data)
     context.commit('setToken', token)
   },
