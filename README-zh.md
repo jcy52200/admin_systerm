@@ -89,32 +89,47 @@ npm run lint -- --fix
 ### 工程结构解析
 
 ```
-├── dist                       # 打包文件夹（可删除重新打包）
+├── build                      # 构建脚本目录
+├── mock                       # 模拟测试文件
+├── node_modules               # node依赖包
+├── public                     # 静态文件（无需构建）
 ├── src                        # 源代码
+│   ├── apis                     # 所有请求
+│   ├── assets                   # 静态资源
 │   ├── components               # 全局组件
-│   ├── composables              # 组合式函数
+│   ├── icons                    # svg图标
+│   ├── layout                   # 布局
 │   ├── router                   # 路由设置
-│   ├── views                    # 主页面
+│   ├── stores                   # 全局 vuex
+│   ├── styles                   # 全局样式
+│   ├── utils                    # 全局方法
+│   ├── views                    # 路由级组件
 │       ├── dashboard               # 首页
 │       ├── category                # 分类页
 │       ├── cart                    # 购物车
 │       ├── my                      # 我的
 │       └── login                   # 登录页
-│   ├── apis                     # 所有请求
-│   ├── stores                   # 全局 vuex
-│       ├── modules                 # 模块
-│       ├── getter.js               # 
-│       └── index.js                # store 入口
-│   ├── styles                   # 全局样式
-│   ├── utils                    # 全局方法
-│   ├── App.vue                  # 入口页面
+│   ├── App.vue                  # 根组件
 │   ├── main.js                  # Vue初始化入口文件
 │   ├── permission.js            # 导航守卫放置页
 │   ├── setting.js               # 页面设置  
+├── test                       # 自动化测试 jest 测试文件目录
 ├── .editorconfig              # editorconfig 配置
+├── .env.development           # 开发环境下的配置文件
+├── .env.production            # 生产环境下的配置文件
+├── .eslintignore              # eslint忽略项
 ├── .eslintrc.cjs              # eslint 配置
 ├── .gitignore                 # git 忽略文件
-├── package.json               # package.json 依赖
+├── .travis.yml                # 配置Travis CI（持续集成服务）的配置文件
+├── babel.config.js            # babel 配置文件
+├── jest.config.js             # jest 配置文件
+├── jsconfig.json              # js项目的根目录
+├── LICENSE                    # 文件开源声明
+├── package-lock.json          # 包版本控制文件
+├── package.json               # package.json 版本及依赖
+├── postcss.config.js          # PostCSS 配置文件
+├── vue.config.js              # 可选配置文件
+├── yarn.lock                  # yarn包版本控制文件 
 ```
 
 更多信息请参考 [使用文档](https://panjiachen.github.io/vue-element-admin-site/zh/)
