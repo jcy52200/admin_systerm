@@ -30,7 +30,7 @@
     </div>
     <!-- 放置弹层 -->
     <!-- 表示会接受子组件的事件  update:showDialog, 值 => 属性 -->
-    <add-dept :current-node-id="currentNodeId" :show-dialog.sync="showDialog" @updateDepartment="getDepartment" />
+    <add-dept ref="addDept" :current-node-id="currentNodeId" :show-dialog.sync="showDialog" @updateDepartment="getDepartment" />
   </div>
 </template>
 <script>
@@ -66,6 +66,12 @@ export default {
         // 添加子部门
         this.showDialog = true // 显示弹层
         this.currentNodeId = id
+      } else if (type === 'edit') {
+        this.showDialog = true
+        this.currentNodeId = id
+        this.$nextTick(() => {
+          this.$refs.addDept.getDepartmentDetail()
+        })
       }
     }
   }
@@ -80,9 +86,6 @@ export default {
   width: 50px;
   display: inline-block;
   margin: 10px;
-<<<<<<< HEAD
   margin-right: 40px;
-=======
->>>>>>> 11f04670318e16bbb66db09e2eca95aed0e787e1
 }
 </style>

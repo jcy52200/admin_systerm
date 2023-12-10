@@ -117,29 +117,17 @@ export function param2Obj(url) {
 }
 
 /**
-<<<<<<< HEAD
  * 列表型数据转化树形
  */
 
-=======
- *
- * 列表型数据转化树形
- *
- */
->>>>>>> 11f04670318e16bbb66db09e2eca95aed0e787e1
 export function transListToTreeData(list, rootValue) {
   const arr = []
   list.forEach(item => {
     if (item.pid === rootValue) {
       // 找到了匹配的节点
       arr.push(item)
-<<<<<<< HEAD
       // 当前节点的id 和当前的子id是相等的
       const children = transListToTreeData(list, item.id)
-=======
-      // 当前节点的id 和当前节点的子节点的pid 是相等的
-      const children = transListToTreeData(list, item.id) // 找到当前节点的子节点
->>>>>>> 11f04670318e16bbb66db09e2eca95aed0e787e1
       item.children = children // 将子节点赋值给当前节点
     }
   })
