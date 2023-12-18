@@ -24,6 +24,9 @@ service.interceptors.request.use((config) => {
 // 响应拦截器
 service.interceptors.response.use((response) => {
   // axios默认包裹了data
+  if (response.data instanceof Blob) {
+    return response.data
+  } // 判断是否为blob，是则直接返回
   const { data, message, success } = response.data
   if (success) {
     return data
