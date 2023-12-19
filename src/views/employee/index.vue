@@ -25,7 +25,7 @@
       </div>
       <div class="right">
         <el-row class="opeate-tools" type="flex" justify="end">
-          <el-button size="mini" type="primary">添加员工</el-button>
+          <el-button size="mini" type="primary" @click="$router.push('/employee/detail')">添加员工</el-button>
           <el-button size="mini" @click="showExcelDialog = true">excel导入</el-button>
           <el-button size="mini" @click="exportEmployee">excel导出</el-button>
         </el-row>
@@ -54,7 +54,7 @@
               <el-button size="mini" type="text">查看</el-button>
               <el-button size="mini" type="text">角色</el-button>
               <el-popconfirm title="确认要删除吗" @onConfirm="confirmDel(row.id)">
-                <el-button size="mini" type="text">删除</el-button>
+                <el-button slot="reference" style="margin-left: 10px;" size="mini" type="text">删除</el-button>
               </el-popconfirm>
             </template>
           </el-table-column>
@@ -97,7 +97,7 @@ export default {
         children: 'children'
       },
       queryParams: {
-        departmentId: null,
+        departmentId: 1,
         page: 1, // 页码
         pagesize: 10, // 每页条数
         keyword: '' // 模糊搜索参数字段
@@ -107,12 +107,14 @@ export default {
   },
   created() {
     this.getDepartment()
+    this.getEmployeeList()
   },
   methods: {
     async getDepartment() {
       // 递归方法，将列表转化为树形
       const result = await getDepartment()
       this.depts = transListToTreeData(result, 0)
+      console.log(this.depts[0])
       this.queryParams.departmentId = this.depts[0].id
       // 设置选中节点
       this.$nextTick(() => { // 树的渲染时异步的，要等待更新完毕
@@ -152,6 +154,11 @@ export default {
     },
     async confirmDel(id) {
       await delEmployee(id)
+      this.$message.success('删除成功')
+      if (this.list.length === 1 && this.queryParams.page > 1) {
+        this.queryParams.page--
+      }
+      this.getEmployeeList()
     }
   }
 }

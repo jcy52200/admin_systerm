@@ -66,7 +66,6 @@ export const constantRoutes = [
   role,
   employee,
   permission,
-  permission,
   attendance,
   approval,
   salary,
