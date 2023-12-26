@@ -33,6 +33,7 @@
     <add-dept ref="addDept" :current-node-id="currentNodeId" :show-dialog.sync="showDialog" @updateDepartment="getDepartment" />
   </div>
 </template>
+
 <script>
 import { getDepartment, delDepartment } from '@/api/department'
 import { transListToTreeData } from '@/utils'

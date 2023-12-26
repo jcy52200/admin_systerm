@@ -127,8 +127,10 @@ export function transListToTreeData(list, rootValue) {
       // 找到了匹配的节点
       arr.push(item)
       // 当前节点的id 和当前的子id是相等的
-      const children = transListToTreeData(list, item.id)
-      item.children = children // 将子节点赋值给当前节点
+      const children = transListToTreeData(list, item.id) // 找到的节点的子节点
+      if (children.length) {
+        item.children = children // 将子节点赋值给当前节点
+      }
     }
   })
   return arr

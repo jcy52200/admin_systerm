@@ -23,7 +23,7 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="电话" prop="mobile">
-                <el-input v-model="userInfo.mobile" size="mini" class="inputW" />
+                <el-input v-model="userInfo.mobile" :disabled="!!this.$route.params.id" size="mini" class="inputW" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -32,6 +32,7 @@
             <el-col :span="12">
               <el-form-item label="部门" prop="departmentId">
                 <!-- 部门级联组件 -->
+                <select-tree v-model="userInfo.departmentId" class="inputW" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -47,14 +48,14 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="入职时间" prop="timeOfEntry">
-                <el-data-picker v-model="userInfo.timeOfEntry" size="mini" type="date" class="inputW" value-format="yyyy-MM-dd" />
+                <el-date-picker v-model="userInfo.timeOfEntry" size="mini" type="date" class="inputW" value-format="yyyy-MM-dd" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="12">
               <el-form-item label="转正时间" prop="correctionTime">
-                <el-data-picker v-model="userInfo.correctionTime" size="mini" type="date" class="inputW" />
+                <el-date-picker v-model="userInfo.correctionTime" size="mini" type="date" class="inputW" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -63,6 +64,7 @@
             <el-col :span="12">
               <el-form-item label="员工头像">
                 <!-- 放置上传图片 -->
+                <image-upload v-model="userInfo.staffPhoto" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -79,7 +81,11 @@
 </template>
 
 <script>
+import selectTree from './components/select-tree.vue'
+import imageUpload from './components/image-upload.vue'
+import { addEmployee, getEmployeeDetail, updateEmployee } from '@/api/employee'
 export default {
+  components: { selectTree, imageUpload },
   data() {
     return {
       userInfo: {
@@ -115,9 +121,28 @@ export default {
       }
     }
   },
+  created() {
+    this.$route.params.id && this.getEmployeeDetail()
+  },
   methods: {
+    async getEmployeeDetail() {
+      await getEmployeeDetail(this.$route.params.id)
+    },
     saveData() {
-      this.$refs.userForm.validate()
+      this.$refs.userForm.validate(async isOK => {
+        if (isOK) {
+          if (this.$route.params.id) {
+            // 编辑模式
+            await updateEmployee(this.userInfo)
+            this.$message.success('编辑员工完成')
+          } else {
+            // 新增模式
+            await addEmployee(this.userInfo)
+            this.$message.success('新增员工成功')
+          }
+          this.$router.push('/employee')
+        }
+      })
     }
   }
 }

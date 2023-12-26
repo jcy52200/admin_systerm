@@ -29,6 +29,7 @@
     </el-form>
   </el-dialog>
 </template>
+
 <script>
 import { getDepartment, getManagerList, addDepartment, getDepartmentDetail, updateDepartment } from '@/api/department'
 export default {
