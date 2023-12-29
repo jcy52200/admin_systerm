@@ -20,7 +20,7 @@ export function addPermission(data) {
   })
 }
 
-// 更新权限
+// 编辑权限
 export function updatePermission(data) {
   return request({
     url: `/sys/permission/${data.id}`,

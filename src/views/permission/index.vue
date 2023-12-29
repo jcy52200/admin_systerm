@@ -1,34 +1,24 @@
 <template>
   <div class="container">
     <div class="app-container">
-      <el-button
-        class="btn-add"
-        size="mini"
-        type="primary"
-        @click="operatePerm(0, 1)"
-      >添加权限</el-button>
-      <el-table default-expand-all :data="list">
+      <el-button class="btn-add" size="mini" type="primary" @click="addPermission(0, 1)">添加权限</el-button>
+      <el-table default-expand-all :data="list" row-key="id">
         <el-table-column prop="name" label="名称" />
         <el-table-column prop="code" label="标识" />
         <el-table-column prop="description" label="描述" />
         <el-table-column label="操作">
           <template v-slot="{ row }">
-            <el-button
-              v-if="row.type === 1"
-              size="mini"
-              type="text"
-              @click="operatePerm(0, 2)"
-            >添加</el-button>
+            <el-button v-if="row.type === 1" size="mini" type="text" @click="addPermission(0, 2)">添加</el-button>
             <el-button size="mini" type="text" @click="editPermission(row.id)">编辑</el-button>
-            <el-button size="mini" type="text" :click="delPremission(row.id)">删除</el-button>
+            <el-button size="mini" type="text" @click="delPermission(row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <!-- 弹层 -->
-    <el-dialog :title="showTitle" :visible.sync="showDialog" @close="close">
+    <el-dialog :title="showTitle" :visible="showDialog" @close="close">
       <!-- 表单内容 -->
-      <el-form ref="addPerm" :model="formData" label-width="120px">
+      <el-form ref="addPerm" :model="formData" label-width="120px" :rules="rules">
         <el-form-item prop="name" label="权限名称">
           <el-input v-model="formData.name" style="width: 80%" size="mini" />
         </el-form-item>
@@ -36,31 +26,16 @@
           <el-input v-model="formData.code" style="width: 80%" size="mini" />
         </el-form-item>
         <el-form-item prop="description" label="权限描述">
-          <el-input
-            v-model="formData.description"
-            type="textarea"
-            :rows="4"
-            style="width: 80%"
-            size="mini"
-          />
+          <el-input v-model="formData.description" type="textarea" :rows="4" style="width: 80%" size="mini" />
         </el-form-item>
         <el-form-item prop="enVisible" label="启用">
-          <el-switch
-            v-model="formData.enVisible"
-            size="mini"
-            active-value="1"
-            inactive-value="0"
-          />
+          <el-switch v-model="formData.enVisible" size="mini" active-value="1" inactive-value="0" />
         </el-form-item>
         <el-form-item>
           <!-- 按钮 -->
-          <el-row slot="footer" type="flex" justify="center">
+          <el-row type="flex" justify="center">
             <el-col :span="12">
-              <el-button
-                size="mini"
-                type="primary"
-                @click="btnOK"
-              >确定</el-button>
+              <el-button size="mini" type="primary" @click="btnOK">确定</el-button>
               <el-button size="mini" @click="close">取消</el-button>
             </el-col>
           </el-row>
@@ -86,6 +61,10 @@ export default {
         enVisible: '0'
       },
       list: [], // 数据属性
+      rules: {
+        name: [{ required: true, message: '权限名称不能为空', trigger: 'blur' }],
+        code: [{ required: true, message: '权限标识不能为空', trigger: 'blur' }]
+      },
       showDialog: false // 弹层的显隐
     }
   },
@@ -101,10 +80,11 @@ export default {
     async getPermissionList() {
       this.list = transListToTreeData(await getPermissionList(), 0)
     },
-    operatePerm(pid, type) {
+    addPermission(pid, type) {
       // 操作部门方法
       this.formData.pid = pid
       this.formData.type = type
+      this.showDialog = true
     },
     // 点击编辑权限
     async editPermission(id) {
@@ -123,21 +103,20 @@ export default {
       }
     },
     // 确定按钮
-    async btnOK() {
-      // this.$refs.addPerm.validate()
-      if (this.formData.id) {
-        // 编辑场景
-        await updatePermission(this.formData)
+    btnOK() {
+      this.$refs.addPerm.validate().then(() => {
+        if (this.formData.id) {
+          // 编辑场景
+          return updatePermission(this.formData)
+        }
+        // 新增选项
+        return addPermission(this.formData)
+      }).then(() => {
+        // 提示消息
+        this.$message.success(this.formData.id ? '更新部门成功' : '新增部门成功')
         this.getPermissionList()
-      } else {
-        // 新增场景
-        await addPermission({ ...this.formData, pid: this.currentNodeId })
-      }
-      // 通知父组件更新
-      this.$emit('updatePermission')
-      // 提示消息
-      this.$message.success(this.formData.id ? '更新部门成功' : '新增部门成功')
-      this.close()
+        this.showDialog = false
+      })
     },
     // 取消按钮
     close() {
@@ -152,6 +131,7 @@ export default {
       this.$refs.addPerm.resetFields() // 重置表单
       this.showDialog = false
     },
+    // 编辑时获取详情
     async getPermissionDetail() {
       this.formData = await getPermissionDetail(this.currentNodeId)
     }
