@@ -52,7 +52,7 @@
           <el-table-column label="操作" width="280px">
             <template v-slot="{ row }">
               <el-button size="mini" type="text" @click="$router.push(`/employee/detail/${row.id}`)">查看</el-button>
-              <el-button size="mini" type="text">角色</el-button>
+              <el-button size="mini" type="text" @click="btnRole">角色</el-button>
               <el-popconfirm title="确认要删除吗" @onConfirm="confirmDel(row.id)">
                 <el-button slot="reference" style="margin-left: 10px;" size="mini" type="text">删除</el-button>
               </el-popconfirm>
@@ -73,6 +73,25 @@
     </div>
     <!-- 放置弹层 -->
     <import-excel :show-excel-dialog.sync="showExcelDialog" @uploadSuccess="getEmployeeList" />
+    <!-- 权限分配弹层 -->
+    <el-dialog :visible.sync="showRoleDialog" title="分配角色">
+      <!-- 弹层内容 -->
+      <!-- checkbox -->
+      <el-checkbox-group v-model="roleIds">
+        <!-- 放置n个的checkbox  要执行checkbox的存储值 item.id-->
+        <el-checkbox
+          v-for="item in roleList"
+          :key="item.id"
+          :label="item.id"
+        >{{ item.name }}</el-checkbox>
+      </el-checkbox-group>
+      <el-row slot="footer" type="flex" justify="center">
+        <el-col :span="6">
+          <el-button type="primary" size="mini" @click="btnRoleOK">确定</el-button>
+          <el-button size="mini" @click="showRoleDialog = false">取消</el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
@@ -80,7 +99,7 @@
 import FileSaver from 'file-saver'
 import { getDepartment } from '@/api/department'
 import { transListToTreeData } from '@/utils'
-import { getEmployeeList, exportEmployee, delEmployee } from '@/api/employee'
+import { getEmployeeList, exportEmployee, delEmployee, getEnableRoleList, assignRole, getEmployeeDetail } from '@/api/employee'
 import ImportExcel from './components/import-excel.vue'
 export default {
   name: 'Employee',
@@ -102,7 +121,12 @@ export default {
         pagesize: 10, // 每页条数
         keyword: '' // 模糊搜索参数字段
       },
-      total: 0 // 员工总数
+      total: 0, // 员工总数
+      // 分配权限参数
+      showRoleDialog: false, // 分配权限弹窗
+      roleList: [], // 角色列表
+      roleIds: [], // 双向绑定数据
+      currentUserId: null // 用来记录当前点击的用户id
     }
   },
   created() {
@@ -152,6 +176,7 @@ export default {
       // FileSaver.saveAs(blob对象，文件名称)
       FileSaver.saveAs(result, '员工信息表.xlsx')
     },
+    // 删除按钮
     async confirmDel(id) {
       await delEmployee(id)
       this.$message.success('删除成功')
@@ -159,6 +184,23 @@ export default {
         this.queryParams.page--
       }
       this.getEmployeeList()
+    },
+    // 分配权限弹层
+    async btnRole(id) {
+      this.showRoleDialog = true
+      this.roleList = await getEnableRoleList()
+      this.currentUserId = id
+      const { roleIds } = await getEmployeeDetail(id)
+      this.roleIds = roleIds
+    },
+    // 分配角色的确定按钮
+    async btnRoleOK() {
+      await assignRole({
+        id: this.currentUserId,
+        roleIds: this.roleIds
+      })
+      this.$message.success('分配角色成功')
+      this.showRoleDialog = false
     }
   }
 }

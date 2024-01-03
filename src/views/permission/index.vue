@@ -16,7 +16,7 @@
       </el-table>
     </div>
     <!-- 弹层 -->
-    <el-dialog :title="showTitle" :visible="showDialog" @close="close">
+    <el-dialog :title="showTitle" :visible.sync="showDialog" @close="close">
       <!-- 表单内容 -->
       <el-form ref="addPerm" :model="formData" label-width="120px" :rules="rules">
         <el-form-item prop="name" label="权限名称">
