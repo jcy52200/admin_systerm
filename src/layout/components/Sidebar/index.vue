@@ -29,12 +29,12 @@ export default {
   components: { SidebarItem, Logo },
   computed: {
     ...mapGetters([
-      'sidebar'
+      'sidebar', 'routes'
     ]),
     // 路由信息的计算属性
-    routes() {
-      return this.$router.options.routes // 当前路由的所有路由信息
-    },
+    // routes() {
+    //   return this.$router.options.routes // 当前路由的所有路由信息
+    // },
     activeMenu() {
       const route = this.$route
       const { meta, path } = route

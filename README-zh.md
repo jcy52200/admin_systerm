@@ -113,10 +113,7 @@ npm run lint -- --fix
 ├── postcss.config.js          # PostCSS 配置文件
 ├── vue.config.js              # 可选配置文件
 ├── yarn.lock                  # yarn包版本控制文件 
-<<<<<<< HEAD
-=======
 
->>>>>>> 11f04670318e16bbb66db09e2eca95aed0e787e1
 ```
 
 更多信息请参考 [使用文档](https://panjiachen.github.io/vue-element-admin-site/zh/)

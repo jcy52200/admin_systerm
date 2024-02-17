@@ -2,6 +2,7 @@ import router from '@/router'
 import nProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import store from '@/store'
+import { asyncRoutes } from '@/router'
 
 /**
  * 前置守卫
@@ -18,9 +19,17 @@ router.beforeEach(async(to, from, next) => {
     } else {
       // 判断是否获取过资料
       if (!store.getters.userId) {
-        await store.dispatch('user/getUserInfo')
+        const { roles } = await store.dispatch('user/getUserInfo')
+        // console.log(roles.menus)
+        const filterRoutes = asyncRoutes.filter(item => {
+          return roles.menus.includes(item.name)
+        }) // 筛选后的结果
+        store.commit('user/setRoutes', filterRoutes)
+        router.addRoutes([...filterRoutes, { path: '*', redirect: '/404', hidden: true }])
+        next(to.path)
+      } else {
+        next() // 放过
       }
-      next() // 放过
     }
   } else {
     // 没有token

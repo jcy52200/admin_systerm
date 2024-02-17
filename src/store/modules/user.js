@@ -1,9 +1,12 @@
 import { getUserInfo, login } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
+import { constantRoutes } from '@/router'
+import { resetRouter } from '@/router'
 // 声明token
 const state = {
   token: getToken(), // 从缓存中读取初始值
-  userInfo: {} // 存储用户基本资料状态
+  userInfo: {}, // 存储用户基本资料状态
+  routes: constantRoutes
 }
 
 // 修改state数据方法
@@ -20,6 +23,9 @@ const mutations = {
   },
   setUserInfo(state, userInfo) {
     state.userInfo = userInfo
+  },
+  setRoutes(state, newRoutes) {
+    state.routes = [...constantRoutes, ...newRoutes]
   }
 }
 
@@ -34,11 +40,13 @@ const actions = {
   async getUserInfo(context) {
     const result = await getUserInfo()
     context.commit('setUserInfo', result)
+    return result
   },
   // 退出登录的action
   logout(context) {
     context.commit('removeToken') // 删除token
     context.commit('setUserInfo', {}) // 设置用户信息为空对象
+    resetRouter()
   }
 }
 

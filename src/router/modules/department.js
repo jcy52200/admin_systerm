@@ -3,6 +3,7 @@ import layout from '@/layout'
 export default {
   // 路由信息
   path: '/department',
+  name: 'department',
   component: layout, // 一级路由
   children: [{
     path: '', // 二级路由地址为空，表示 /department 显示一级路由 + 二级路由
