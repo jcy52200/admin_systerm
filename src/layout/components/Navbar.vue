@@ -34,7 +34,7 @@
     </div>
     <!-- 放置dialog -->
     <!-- sync:接收子组件传过来的事件的值 -->
-    <el-dialog width="500px" title="修改密码" :visible.sync="showDialog" @close="btn">
+    <el-dialog width="500px" title="修改密码" :visible.sync="showDialog">
       <el-form ref="passForm" label-width="120px" :model="passForm" :rules="rules">
         <el-form-item label="旧密码" prop="oldPassword">
           <el-input v-model="passForm.oldPassword" show-password size="small" />
